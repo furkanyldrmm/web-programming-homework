@@ -55,9 +55,9 @@
             <a class="dropdown-item" href="#">Separated link</a>
           </base-dropdown>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <button @click="logOut" class="nav-link">
               Log out
-            </a>
+            </button>
           </li>
         </ul>
       </div>
@@ -78,6 +78,12 @@
       }
     },
     methods: {
+
+logOut(){
+  this.$store.commit("logOut", true);
+            this.$router.push('/login')
+},
+
       capitalizeFirstLetter (string) {
         return string.charAt(0).toUpperCase() + string.slice(1)
       },

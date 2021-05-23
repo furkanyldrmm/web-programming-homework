@@ -6,13 +6,22 @@ import NotFound from '../pages/NotFoundPage.vue'
 import Overview from 'src/pages/Overview.vue'
 import UserProfile from 'src/pages/UserProfile.vue'
 import TableList from 'src/pages/TableList.vue'
-import Typography from 'src/pages/Typography.vue'
+import TableList2 from 'src/pages/TableList2.vue'
+import TableList3 from 'src/pages/TableList3.vue'
+import TableList4 from 'src/pages/TableList4.vue'
+import TableList5 from 'src/pages/TableList5.vue'
+import TableList6 from 'src/pages/TableList6.vue'
+
+
 import Icons from 'src/pages/Icons.vue'
 import Maps from 'src/pages/Maps.vue'
 import Notifications from 'src/pages/Notifications.vue'
 import Upgrade from 'src/pages/Upgrade.vue'
 import Login from 'src/pages/Login.vue'
 import Shop from 'src/pages/Shop.vue'
+import store from 'src/store/store'
+
+
 
 const routes = [
   {
@@ -24,11 +33,19 @@ const routes = [
     path: '/admin',
     component: DashboardLayout,
     redirect: '/admin/overview',
+    
     children: [
       {
         path: 'overview',
         name: 'Overview',
         component: Overview,
+        beforeEnter: (to, from, next) => {
+          if(store.state.authenticated == false) {
+              next({path:'/login'});
+          } else {
+              next();
+          }
+      } 
        
       },
       {
@@ -38,25 +55,36 @@ const routes = [
       
       },
       {
-        path: 'table-list',
+        path: 'products',
         name: 'Table List',
         component: TableList,
       },
       {
-        path: 'typography',
+        path: 'plan/:id',
+        name: 'Table List',
+        props: true,
+        component: TableList6,
+      },
+      {
+        path: 'orders',
+        name: 'Table List',
+        component: TableList5,
+      },
+      {
+        path: 'operations',
         name: 'Typography',
-        component: Typography,
+        component: TableList3,
        
       },
       {
-        path: 'icons',
-        name: 'Icons',
-        component: Icons
+        path: 'workcenters',
+        name: 'WorkCenters',
+        component: TableList2
       },
       {
-        path: 'maps',
+        path: 'workcenter-operation',
         name: 'Maps',
-        component: Maps
+        component: TableList4
       },
       {
         path: 'notifications',
@@ -79,13 +107,14 @@ const routes = [
   {
     path:'/shop',
     component:Shop,
-    /* beforeEnter: (to, from, next) => {
-      if(this.store.state.authenticated == false) {
-          next(false);
+
+     beforeEnter: (to, from, next) => {
+      if(store.state.authenticated == false) {
+          next({path:'/login'});
       } else {
           next();
       }
-  } */
+  } 
   },
   { path: '*', component: NotFound }
 ]

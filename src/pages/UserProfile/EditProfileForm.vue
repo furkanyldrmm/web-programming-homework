@@ -48,6 +48,8 @@ Login
             console.log("commit")
             this.$store.commit("setAuthentication", true);
             this.$store.commit("setUserData", res.data);
+            this.$router.push('/shop')
+
 
           }
 

@@ -20,6 +20,8 @@ import axios from 'axios'
 import Vuex from 'vuex'
 
 
+import VueSwal from 'vue-swal'
+import DateTimePicker from 'vue-vanilla-datetime-picker';
 
 // LightBootstrap plugin
 import LightBootstrap from './light-bootstrap-main'
@@ -28,37 +30,29 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 // router setup
 import routes from './routes/routes'
+import store from './store/store'
 
 import './registerServiceWorker'
+
+import vuetify from '@/plugins/vuetify' // path to vuetify export
+
 // plugin setup
 Vue.use(VueRouter)
 Vue.use(LightBootstrap)
+Vue.component('date-time-picker', DateTimePicker); 
+
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 Vue.use(Vuex)
+Vue.use(VueSwal)
+
 
 // configure router
 Vue.prototype.$axios = axios
 
-const store = new Vuex.Store(
-  {
-      state: {
-          authenticated: false,
-          user:""
-      },
-      mutations: {
-          setAuthentication(state, status) {
-              state.authenticated = status;
-          },
-          setUserData(state, status) {
-            console.log(status);
-            state.user = status;
-        }
-      }
-  }
-);
+
 
 const router = new VueRouter({
   routes, // short for routes: routes
@@ -76,6 +70,7 @@ const router = new VueRouter({
 new Vue({
   el: '#app',
   render: h => h(App),
-  store: store,
-  router
+  store,
+  router,
+  vuetify
 })

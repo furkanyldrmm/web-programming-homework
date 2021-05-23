@@ -10,21 +10,33 @@
         <i class="nc-icon nc-circle-09"></i>
         <p>User Profile</p>
       </sidebar-link>
-      <sidebar-link to="/admin/table-list">
+    <sidebar-link to="/admin/orders">
+        <i class="nc-icon nc-notes"></i>
+        <p>Orders</p>
+      </sidebar-link>
+        <sidebar-link to="/admin/plans">
+        <i class="nc-icon nc-notes"></i>
+        <p>Plans</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/products">
         <i class="nc-icon nc-notes"></i>
         <p>Products</p>
       </sidebar-link>
-      <sidebar-link to="/admin/typography">
+      <sidebar-link to="/admin/sub-products">
+        <i class="nc-icon nc-notes"></i>
+        <p>Sub-Products</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/workcenters">
         <i class="nc-icon nc-paper-2"></i>
         <p>WorkCenters</p>
       </sidebar-link>
-      <sidebar-link to="/admin/icons">
+      <sidebar-link to="/admin/operations">
         <i class="nc-icon nc-atom"></i>
-        <p>Icons</p>
+        <p>Operations</p>
       </sidebar-link>
-      <sidebar-link to="/admin/maps">
+      <sidebar-link to="/admin/workcenter-operation">
         <i class="nc-icon nc-pin-3"></i>
-        <p>Maps</p>
+        <p>WorkCenter Operation</p>
       </sidebar-link>
       <sidebar-link to="/admin/notifications">
         <i class="nc-icon nc-bell-55"></i>

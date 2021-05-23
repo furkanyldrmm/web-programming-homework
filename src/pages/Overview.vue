@@ -8,8 +8,8 @@
               <i class="nc-icon nc-chart text-warning"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Capacity</p>
-              <h4 class="card-title">105GB</h4>
+              <p class="card-category">Monthly Orders</p>
+              <h4 class="card-title">10</h4>
             </div>
             <div slot="footer">
               <i class="fa fa-refresh"></i>Updated now
@@ -38,7 +38,7 @@
               <i class="nc-icon nc-vector text-danger"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Errors</p>
+              <p class="card-category">Work Centers</p>
               <h4 class="card-title">23</h4>
             </div>
             <div slot="footer">
@@ -53,7 +53,7 @@
               <i class="nc-icon nc-favourite-28 text-primary"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Followers</p>
+              <p class="card-category">Users</p>
               <h4 class="card-title">+45</h4>
             </div>
             <div slot="footer">
@@ -69,7 +69,7 @@
                       :chart-options="lineChart.options"
                       :responsive-options="lineChart.responsiveOptions">
             <template slot="header">
-              <h4 class="card-title">Siparişler</h4>
+              <h4 class="card-title">Orders</h4>
               <p class="card-category">24 Hours performance</p>
             </template>
             <template slot="footer">
@@ -89,7 +89,7 @@
         <div class="col-md-4">
           <chart-card :chart-data="pieChart.data" chart-type="Pie">
             <template slot="header">
-              <h4 class="card-title">Email Statistics</h4>
+              <h4 class="card-title">Best Selling products</h4>
               <p class="card-category">Last Campaign Performance</p>
             </template>
             <template slot="footer">
