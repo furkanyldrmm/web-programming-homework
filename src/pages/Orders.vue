@@ -1,0 +1,390 @@
+
+<template>
+  <div id="app">
+    <div>
+      <b-navbar toggleable="lg" variant="info">
+        <b-navbar-brand href="#/shop">FastShop</b-navbar-brand>
+
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+        <b-collapse id="nav-collapse" is-nav>
+          <b-navbar-nav>
+            <b-nav-item href="#">Market</b-nav-item>
+            <b-nav-item href="#">Branches</b-nav-item>
+            <b-nav-item href="#">Contact</b-nav-item>
+            <b-nav-item href="#">About</b-nav-item>
+          </b-navbar-nav>
+
+          <!-- Right aligned nav items -->
+          <b-navbar-nav class="ml-auto">
+            <button
+              class="btn btn-primary"
+              @click="showCart = !showCart"
+              v-show="!verified"
+            >
+              {{
+                items.length +
+                (items.length > 1 || items.length === 0 ? " items" : " item")
+              }}
+            </button>
+            <b-nav-item-dropdown right>
+              <!-- Using 'button-content' slot -->
+              <template #button-content>
+                <em v-if="$store.state.user">{{ $store.state.user.name }}</em>
+              </template>
+              <b-dropdown-item href="#">Orders</b-dropdown-item>
+
+              <b-dropdown-item @click="logOut">Sign Out</b-dropdown-item>
+            </b-nav-item-dropdown>
+          </b-navbar-nav>
+        </b-collapse>
+      </b-navbar>
+
+    <div class="row">
+        <div class="col-9 mt-3" style="margin:auto">
+            <div class="card" >
+                <div class="card-horizontal" style="display: flex; flex: 1 1 auto;">
+                        <div class="card-body">
+                            <h4 class="card-title">Order</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title">Due Date</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title">Status</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
+</div>
+</template>
+<script>
+import EditProfileForm from "./UserProfile/EditProfileForm.vue";
+import PriceRangeSlider from "../components/PriceRangeSlider.vue";
+import QuantityInput from "../components/QuantityInput.vue";
+
+export default {
+  components: {
+    PriceRangeSlider,
+    EditProfileForm,
+    QuantityInput,
+  },
+
+  data() {
+    return {
+      quantity: 1,
+      data: "",
+      deneme: 1,
+      deadline_date: "",
+
+      items: [],
+      shop: [],
+      showCart: false,
+      verified: false,
+    };
+  },
+  created() {
+    this.loadProduct();
+  },
+  watch: {
+    "items.quantity"(val) {
+      console.log(val);
+    },
+  },
+  computed: {},
+  methods: {
+    logOut() {
+      this.$store.commit("logOut", true);
+      this.$router.push("/login");
+    },
+    changeProductQuantity(quantity, item) {
+      console.log(quantity);
+      item.selected_quantity = quantity;
+    },
+
+    increase(item) {
+      console.log("aaa");
+      item.quantity++;
+      this.deneme++;
+      console.log(item.quantity);
+    },
+    decrease(item) {
+      item.quantity--;
+      this.deneme--;
+    },
+    createOrder() {
+      console.log(this.$store.state.user);
+
+      this.$axios
+        .post("http://127.0.0.1:8000/api/order", {
+          dead_line: this.deadline_date,
+          user_id: this.$store.state.user.id,
+          order_items: this.items,
+        })
+
+        .then((res) => {
+          this.$swal("Hello word!");
+          this.items = [];
+
+          this.verified = false;
+        });
+    },
+    total() {
+      var total = 0;
+      for (var i = 0; i < this.items.length; i++) {
+        console.log(this.items);
+        console.log(this.items[i].price * this.items[i].quantity);
+        total += this.items[i].price * this.items[i].quantity;
+      }
+      return total;
+    },
+    loadProduct() {
+      this.$axios
+        .get("http://127.0.0.1:8000/api/products", { params: this.moreParams })
+        .then((res) => {
+          this.shop = res.data;
+          res.data.forEach((item) => {
+            item.quantity = 1;
+            item.selected_quantity = 1;
+            this.shop.push(item);
+          });
+
+          console.log(this.shop);
+        });
+    },
+
+    addToCart(item) {
+      const existingItem = this.items.find((e) => {
+        return e.name === item.name;
+      });
+      if (existingItem) {
+        existingItem.quantity = item.quantity + item.selected_quantity;
+        item.selected_quantity = 0;
+        if (this.showCart === true) {
+          this.showCart = false;
+          this.showCart = true;
+        }
+      } else {
+        item.quantity = item.selected_quantity;
+        item.selected_quantity = 0;
+        // Push the item into the cart
+        this.items.push(item);
+      }
+    },
+    removeFromCart(item) {
+      item.quantity -= 1;
+      this.items.splice(this.items.indexOf(item), 1);
+    },
+  },
+};
+</script>
+<style  lang="scss" scoped>
+#nav-collapse {
+  color: white !important;
+}
+.nav-link {
+  color: white !important;
+}
+
+.product-title {
+  text-align: center;
+  margin-top: 5px;
+  font-size: 20px;
+  font-weight: 700;
+}
+.product {
+  padding: 10px;
+}
+img {
+  transition: transform 0.2s; /* Animation */
+
+  object-fit: cover;
+  width: 250px;
+  height: 200px;
+
+  &:hover {
+    transform: scale(
+      1.5
+    ); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+  }
+}
+body {
+  height: 100%;
+  background: linear-gradient(to top, #ff6b83, lighten(#ff6b83, 15%)) no-repeat
+    fixed !important;
+}
+
+#app {
+  font-family: "Roboto Slab", serif;
+}
+
+.header {
+  height: 80px;
+  h2 {
+    color: #fff;
+    font-family: "Rock Salt";
+    float: left;
+    font-weight: bolder;
+    margin: 10px 20px;
+  }
+  button {
+    border: 0;
+    background: #ffdbe0;
+    transition: all 0.1s ease-out;
+    &:hover {
+      background: darken(#ffdbe0, 2%);
+    }
+  }
+  div {
+    float: right;
+    display: inline;
+    margin: 10px;
+  }
+}
+
+li {
+  list-style: none;
+}
+
+.fa {
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.fade-transition {
+  transition: all 0.2s ease-out;
+}
+
+.fade-enter,
+.fade-leave {
+  opacity: 0;
+}
+
+.cart {
+  > div {
+    z-index: 100;
+    background: #fff;
+    padding: 20px 30px;
+    position: absolute;
+    right: 30px;
+    box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
+    div {
+      text-align: center;
+    }
+  }
+  ul,
+  li,
+  p {
+    margin-bottom: 0;
+  }
+  button {
+    margin: 20px 0 10px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+  input {
+    width: 30px;
+  }
+}
+.quantity-field {
+  width: 40px;
+}
+
+.price {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+.shop {
+  display: flex;
+  h3 {
+    position: absolute;
+    top: -85px;
+    left: -30px;
+    color: rgba(255, 255, 255, 0.3);
+    font-family: sans-serif;
+    font-size: 4em;
+    font-weight: bold;
+    letter-spacing: -2px;
+  }
+  ul {
+    margin-top: 90px;
+  }
+  li div {
+    padding: 30px;
+    background: #fff;
+    margin-bottom: 20px;
+    box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.3);
+  }
+  button {
+    color: white;
+    border: 0;
+    background: #00adb5;
+    margin: 0;
+    transition: all 0.1s ease-out;
+    &:hover {
+      background: darken(#00adb5, 5%);
+    }
+  }
+}
+
+.filter {
+  padding: 60px;
+}
+.aa {
+  height: 30px;
+  display: flex;
+  box-shadow: none !important;
+}
+.checkout {
+  background: #fff;
+  box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.3);
+  margin-top: 90px;
+  padding: 50px 60px;
+  h3 {
+    position: absolute;
+    top: -85px;
+    left: -30px;
+    color: rgba(255, 255, 255, 0.3);
+    font-family: sans-serif;
+    font-size: 4em;
+    font-weight: bold;
+    letter-spacing: -2px;
+  }
+  span {
+    float: right;
+  }
+}
+.btn-primary {
+  color: white;
+}
+
+@media screen and (max-width: 630px) {
+  .checkout {
+    padding: 30px 40px;
+    h5 {
+      font-size: 1.2em;
+    }
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .shop h3,
+  .checkout h3 {
+    font-size: 3.3em;
+    top: -70px;
+    left: 0px;
+  }
+}
+</style>
